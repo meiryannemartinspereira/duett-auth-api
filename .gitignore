@@ -1,0 +1,49 @@
+### Maven ###
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### Spring Boot ###
+*.log
+logs/
+spring.log
+
+### H2 Database ###
+*.mv.db
+*.trace.db
+
+### IDE - IntelliJ ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### IDE - VS Code ###
+.vscode/
+
+### Eclipse ###
+.project
+.classpath
+.settings/
+
+### MacOS ###
+.DS_Store
+
+### Linux ###
+*~
+
+### Windows ###
+Thumbs.db
+
+### Env files ###
+.env
+
+### Build ###
+/build/
+
+### Coverage ###
+/coverage/
+
+### Misc ###
+*.swp
+*.swo
