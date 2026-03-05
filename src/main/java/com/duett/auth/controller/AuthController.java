@@ -3,6 +3,7 @@ package com.duett.auth.controller;
 import com.duett.auth.dto.AuthRequest;
 import com.duett.auth.dto.AuthResponse;
 import com.duett.auth.dto.RegisterRequest;
+import com.duett.auth.dto.UserResponse;
 import com.duett.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +34,10 @@ public class AuthController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<String> testProtected() {
         return ResponseEntity.ok("Protected endpoint works!");
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getCurrentUser() {
+        return ResponseEntity.ok(authService.getCurrentUser());
     }
 }

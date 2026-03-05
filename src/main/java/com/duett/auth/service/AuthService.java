@@ -3,6 +3,7 @@ package com.duett.auth.service;
 import com.duett.auth.dto.AuthRequest;
 import com.duett.auth.dto.AuthResponse;
 import com.duett.auth.dto.RegisterRequest;
+import com.duett.auth.dto.UserResponse;
 import com.duett.auth.entity.Role;
 import com.duett.auth.entity.User;
 import com.duett.auth.exception.UserNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -67,5 +69,24 @@ public class AuthService {
         String jwtToken = jwtService.generateAccessToken(userDetails);
 
         return new AuthResponse(jwtToken);
+    }
+
+    public UserResponse getCurrentUser() {
+        CustomUserDetails userDetails =
+                (CustomUserDetails) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+
+        User user = repository.findById(userDetails.getId())
+                .orElseThrow(() -> new UserNotFoundException(userDetails.getUsername()));
+
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getCpf(),
+                user.getRole()
+        );
     }
 }
