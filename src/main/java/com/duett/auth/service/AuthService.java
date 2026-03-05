@@ -2,6 +2,7 @@ package com.duett.auth.service;
 
 import com.duett.auth.dto.AuthRequest;
 import com.duett.auth.dto.AuthResponse;
+import com.duett.auth.dto.RefreshRequest;
 import com.duett.auth.dto.RegisterRequest;
 import com.duett.auth.dto.UserResponse;
 import com.duett.auth.entity.Role;
@@ -13,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -48,9 +49,11 @@ public class AuthService {
         User savedUser = repository.save(user);
 
         CustomUserDetails userDetails = new CustomUserDetails(savedUser);
-        String jwtToken = jwtService.generateAccessToken(userDetails);
 
-        return new AuthResponse(jwtToken);
+        String accessToken = jwtService.generateAccessToken(userDetails);
+        String refreshToken = jwtService.generateRefreshToken(userDetails);
+
+        return new AuthResponse(accessToken, refreshToken);
     }
 
     public AuthResponse authenticate(@NonNull AuthRequest request) {
@@ -66,12 +69,40 @@ public class AuthService {
                 .orElseThrow(() -> new UserNotFoundException(request.email()));
 
         CustomUserDetails userDetails = new CustomUserDetails(user);
-        String jwtToken = jwtService.generateAccessToken(userDetails);
 
-        return new AuthResponse(jwtToken);
+        String accessToken = jwtService.generateAccessToken(userDetails);
+        String refreshToken = jwtService.generateRefreshToken(userDetails);
+
+        return new AuthResponse(accessToken, refreshToken);
+    }
+
+    public AuthResponse refreshToken(@NonNull RefreshRequest request) {
+
+        String refreshToken = request.refreshToken();
+
+        if (!jwtService.isRefreshToken(refreshToken)) {
+            throw new RuntimeException("Invalid token type");
+        }
+
+        String email = jwtService.extractEmail(refreshToken);
+
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+
+        CustomUserDetails userDetails = new CustomUserDetails(user);
+
+        if (!jwtService.validateToken(refreshToken, userDetails)) {
+            throw new RuntimeException("Invalid refresh token");
+        }
+
+        String newAccessToken = jwtService.generateAccessToken(userDetails);
+        String newRefreshToken = jwtService.generateRefreshToken(userDetails);
+
+        return new AuthResponse(newAccessToken, newRefreshToken);
     }
 
     public UserResponse getCurrentUser() {
+
         CustomUserDetails userDetails =
                 (CustomUserDetails) SecurityContextHolder
                         .getContext()

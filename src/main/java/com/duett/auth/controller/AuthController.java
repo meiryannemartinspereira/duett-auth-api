@@ -2,6 +2,7 @@ package com.duett.auth.controller;
 
 import com.duett.auth.dto.AuthRequest;
 import com.duett.auth.dto.AuthResponse;
+import com.duett.auth.dto.RefreshRequest;
 import com.duett.auth.dto.RegisterRequest;
 import com.duett.auth.dto.UserResponse;
 import com.duett.auth.service.AuthService;
@@ -40,4 +41,11 @@ public class AuthController {
     public ResponseEntity<UserResponse> getCurrentUser() {
         return ResponseEntity.ok(authService.getCurrentUser());
     }
+
+    
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@NonNull @RequestBody RefreshRequest request) {
+        return ResponseEntity.ok(authService.refreshToken(request));
+    }
+
 }
