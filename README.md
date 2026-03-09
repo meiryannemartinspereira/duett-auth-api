@@ -96,7 +96,7 @@ mvn spring-boot:run
 
 ### Swagger / OpenAPI
 
-* URL: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+* URL: [https://duett-auth-api.onrender.com/swagger-ui/index.html#/](https://duett-auth-api.onrender.com/swagger-ui/index.html#/)
 
 ---
 
@@ -105,7 +105,7 @@ mvn spring-boot:run
 ### Register
 
 ```bash
-curl -X POST http://localhost:8080/auth/register \
+curl -X POST https://duett-auth-api.onrender.com//auth/register \
   -H "Content-Type: application/json" \
   -d '{"name":"User Test","email":"user@test.com","password":"123456","cpf":"123.456.789-10"}'
 ```
@@ -113,7 +113,7 @@ curl -X POST http://localhost:8080/auth/register \
 ### Authenticate
 
 ```bash
-curl -X POST http://localhost:8080/auth/authenticate \
+curl -X POST https://duett-auth-api.onrender.com//auth/authenticate \
   -H "Content-Type: application/json" \
   -d '{"email":"user@test.com","password":"123456"}'
 ```
@@ -121,14 +121,14 @@ curl -X POST http://localhost:8080/auth/authenticate \
 ### Get Current User
 
 ```bash
-curl -X GET http://localhost:8080/auth/me \
+curl -X GET https://duett-auth-api.onrender.com//auth/me \
   -H "Authorization: Bearer <access_token>"
 ```
 
 ### Refresh Token
 
 ```bash
-curl -X POST http://localhost:8080/auth/refresh \
+curl -X POST https://duett-auth-api.onrender.com//auth/refresh \
   -H "Content-Type: application/json" \
   -d '{"refreshToken":"<refresh_token>"}'
 ```
@@ -136,14 +136,14 @@ curl -X POST http://localhost:8080/auth/refresh \
 ### Logout
 
 ```bash
-curl -X POST http://localhost:8080/auth/logout \
+curl -X POST https://duett-auth-api.onrender.com//auth/logout \
   -H "Authorization: Bearer <access_token>"
 ```
 
 ### Admin - List Users
 
 ```bash
-curl -X GET http://localhost:8080/admin/users \
+curl -X GET https://duett-auth-api.onrender.com//admin/users \
   -H "Authorization: Bearer <admin_access_token>"
 ```
 
